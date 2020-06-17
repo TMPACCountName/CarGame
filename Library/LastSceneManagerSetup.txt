@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/ECCAssets/Scenes/ECCGame.unity
+  isLoaded: 1
+  isActive: 1
