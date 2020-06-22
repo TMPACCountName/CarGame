@@ -199,6 +199,7 @@ namespace CarGame
                     if (Vector3.Angle(thisTransform.forward, targetPosition - thisTransform.position) > chaseAngle)
                     {
                         Rotate(ChaseAngle(thisTransform.forward, targetPosition - thisTransform.position, Vector3.up));
+                        
                     }
                     else //Стоп вращения
                     {
@@ -313,7 +314,7 @@ namespace CarGame
             {
                 //Возврат угла в 0
                 thisTransform.Find("Base").localEulerAngles = Vector3.up * Mathf.LerpAngle(thisTransform.Find("Base").localEulerAngles.y, 0, Time.deltaTime * 5);
-
+                
                 //Возврат Шаси в угол 0
                 if (chassis) chassis.localEulerAngles = Vector3.forward * Mathf.LerpAngle(chassis.localEulerAngles.z, 0, Time.deltaTime * 5);//  Mathf.LerpAngle(thisTransform.Find("Base").localEulerAngles.y, rotateDirection * driftAngle, Time.deltaTime);
 
@@ -371,6 +372,7 @@ namespace CarGame
             }
 
             // Анимация встраски
+            
             if (changeValue < 0 && gameController.playerObject == this) Camera.main.transform.parent.GetComponent<Animation>().Play();
 
             // Смерть при <=0 хп

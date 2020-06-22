@@ -6,44 +6,37 @@ using System.Collections;
 namespace EndlessCarChase
 {
     /// <summary>
-    /// Includes functions for loading levels and URLs. It's intended for use with UI Buttons
+    /// Включает функции для загрузки уровней и URL-адресов. Он предназначен для использования с кнопками пользовательского интерфейса
     /// </summary>
     public class ECCLoadLevel : MonoBehaviour
     {
-        [Tooltip("How many seconds to wait before loading a level or URL")]
+        [Tooltip("Ожидание перед загрузкой")]
         public float loadDelay = 1;
 
-        [Tooltip("The name of the URL to be loaded")]
+        [Tooltip("Юрл ссылка для загрузки")]
         public string urlName = "";
 
-        [Tooltip("The name of the level to be loaded")]
+        [Tooltip("Название уровня")]
         public string levelName = "";
 
-        [Tooltip("The sound that plays when loading/restarting/etc")]
+        [Tooltip("Музыкуа играющая при перезагрузке")]
         public AudioClip soundLoad;
 
-        [Tooltip("The tag of the source object from which sounds play")]
+        [Tooltip("Тег откуда воспроизводить взук")]
         public string soundSourceTag = "Sound";
 
-        [Tooltip("The source object from which sounds play. You can assign this from the scene")]
+        [Tooltip("Исходный источник звука")]
         public GameObject soundSource;
 
-        [Tooltip("The animation that plays when we start loading a level")]
+        [Tooltip("Название анимации которую мы юзаем когда грузим уровень")]
         public string loadAnimation;
 
-        [Tooltip("The transition effect that appears when we start loading a level")]
+        [Tooltip("Эффект перехода")]
         public Transform transition;
 
-        [Tooltip("Should this button be triggered by clicking?")]
+        [Tooltip("Перегружать по клику?")]
         public bool loadOnClick = false;
 
-        /// <summary>
-        /// Start is only called once in the lifetime of the behaviour.
-        /// The difference between Awake and Start is that Start is only called if the script instance is enabled.
-        /// This allows you to delay any initialization code, until it is really needed.
-        /// Awake is always called before any Start functions.
-        /// This allows you to order initialization of scripts
-        /// </summary>
         void Start()
         {
             // If there is no sound source assigned, try to assign it from the tag name
@@ -55,22 +48,22 @@ namespace EndlessCarChase
 
 
         /// <summary>
-        /// Loads the URL.
+        /// Грузить юрл
         /// </summary>
         /// <param name="urlName">URL/URI</param>
         public void LoadURL()
         {
             Time.timeScale = 1;
 
-            // If there is a sound, play it from the source
+            // Звук
             if (soundLoad && soundSource) soundSource.GetComponent<AudioSource>().PlayOneShot(soundLoad);
 
-            // Execute the function after a delay
+            // Выполнить функцию
             Invoke("ExecuteLoadURL", loadDelay);
         }
 
         /// <summary>
-        /// Executes the load URL function
+        /// Открыть юрл 
         /// </summary>
         void ExecuteLoadURL()
         {
@@ -78,19 +71,19 @@ namespace EndlessCarChase
         }
 
         /// <summary>
-        /// Loads the level.
+        /// Загрузить уровень
         /// </summary>
         /// <param name="levelName">Level name.</param>
         public void LoadLevel()
         {
             Time.timeScale = 1;
 
-            // If there is a sound, play it from the source
+            // музыка
             if (soundSource && soundLoad) soundSource.GetComponent<AudioSource>().PlayOneShot(soundLoad);
 
             if (transition) Invoke("ShowTransition", loadDelay - 1);
 
-            // Execute the function after a delay
+            // Загрузка
             Invoke("ExecuteLoadLevel", loadDelay);
         }
 
@@ -100,7 +93,7 @@ namespace EndlessCarChase
         }
 
         /// <summary>
-        /// Executes the Load Level function
+        /// Загрузить лвл
         /// </summary>
         void ExecuteLoadLevel()
         {
@@ -108,24 +101,18 @@ namespace EndlessCarChase
         }
 
         /// <summary>
-        /// Restarts the current level.
+        /// Рестар текущего уровня
         /// </summary>
         public void RestartLevel()
         {
             Time.timeScale = 1;
-
-            // If there is a sound, play it from the source
             if (soundSource && soundLoad) soundSource.GetComponent<AudioSource>().PlayOneShot(soundLoad);
-
             if (transition) Instantiate(transition);
-
-
-            // Execute the function after a delay
             Invoke("ExecuteRestartLevel", loadDelay);
         }
 
         /// <summary>
-        /// Executes the Load Level function
+        /// Загрузка уровня функция
         /// </summary>
         void ExecuteRestartLevel()
         {

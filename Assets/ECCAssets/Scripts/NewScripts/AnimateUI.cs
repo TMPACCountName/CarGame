@@ -56,6 +56,7 @@ namespace CarGame
 				previousTime = currentTime;
 
 				// Рассчитать текущее время в текущей анимации
+				
 				animationObject[introAnimation.name].time = animationTime;
 
 				animationObject.Sample();

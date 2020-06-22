@@ -77,7 +77,6 @@ namespace CarGame
         public void OnEnable()
         {
             if (shopCamera) shopCamera.SetActive(true);
-
             //Получаем количество денег шо у нас есть
             moneyLeft = PlayerPrefs.GetInt(moneyPlayerprefs, moneyLeft);
 
@@ -105,8 +104,8 @@ namespace CarGame
 
         public void OnDisable()
         {
-            if (shopCamera) shopCamera.SetActive(false);
 
+            if (shopCamera) shopCamera.SetActive(false);
             // Удалить значок предыдущего элемента
             if (currentIcon)
             {
@@ -252,12 +251,9 @@ namespace CarGame
 
                 // Начать игру
                 gameController.StartGame();
-
                 // Сломать значок в магазе
                 Destroy(currentIcon.gameObject);
-
                 // Деактивация магазина
-                if (shopCamera) shopCamera.SetActive(false);
                 gameObject.SetActive(false);
             }
             else if (moneyLeft >= items[currentItem].price)

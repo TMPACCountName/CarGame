@@ -3,18 +3,16 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEditor;
+
 
 namespace CarGame
 {
-    /// <summary>
-    /// This script controls the game, starting it, following game progress, and finishing it with game over or victory.
-    /// </summary>
+
     public class GameController : MonoBehaviour
     {
         [Tooltip("Камера следующая за игроком")]
         public Transform cameraHolder;
-
+        internal float cameraFieldOfView = 60f;
         // Содержит миникарту
         internal Transform miniMap;
 
@@ -114,7 +112,6 @@ namespace CarGame
             }
 
         }
-
         void Start()
         {
             //Application.targetFrameRate = 30;
@@ -137,7 +134,6 @@ namespace CarGame
 
             //убираем руль из видимости
             if (steeringWheel) steeringWheel.gameObject.SetActive(false);
-            gameStarted = true;
         }
 
         public void StartGame()
@@ -235,7 +231,7 @@ namespace CarGame
                             }
                             else 
                             {
-                                playerDirection = 0;
+                                playerDirection = 0f;
                             }
                         }
                         else // Геймпад или клава
