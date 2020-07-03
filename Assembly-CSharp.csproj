@@ -66,6 +66,7 @@
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\AudioControl.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\Car.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\GameController.cs" />
+     <Compile Include="Assets\ECCAssets\Scripts\NewScripts\GameZone.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\GlobalMusic.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\Item.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\LoadLevel.cs" />
@@ -77,6 +78,7 @@
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\Shop.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\SpawnAroundObject.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\Types\ShopItem.cs" />
+     <Compile Include="Assets\Joystick\Scripts\Stick.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Hub/Editor/5.6.4f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
@@ -97,6 +99,12 @@
  </Reference>
  <Reference Include="UnityEngine.VR">
  <HintPath>C:/Program Files/Unity/Hub/Editor/5.6.4f1/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.iOS.Extensions.Xcode">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/5.6.4f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Xcode.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.iOS.Extensions.Common">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/5.6.4f1/Editor/Data/PlaybackEngines/iOSSupport/UnityEditor.iOS.Extensions.Common.dll</HintPath>
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

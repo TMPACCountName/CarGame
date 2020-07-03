@@ -89,7 +89,9 @@ namespace CarGame
 
         //Угол начала погони
         internal float chaseAngle;
-        
+        //Задний ход
+        internal float reverseRatioSpeed = 5.3f;
+        internal float reverseRatioDirection = 2f;
 
         private void Start()
         {
@@ -145,9 +147,6 @@ namespace CarGame
             // Если ничего не началось
             if (gameController && !gameController.gameStarted) return;
 
-            // Едем вперед
-            thisTransform.Translate(Vector3.forward * Time.deltaTime * speed, Space.Self);
-
             // Получить текущую позицию игрока
             if (health > 0)
             {
@@ -163,6 +162,9 @@ namespace CarGame
             // Управление для ИИ
             if (gameController.playerObject != this)
             {
+                //Кусок кода оставим ботам т.к. сами мы будем ехать по кнопкам
+                thisTransform.Translate(Vector3.forward * Time.deltaTime * speed, Space.Self);
+
                 // Shoot a ray at the position to see if we hit something
                 //Ray ray = new Ray(thisTransform.position + Vector3.up * 0.2f + thisTransform.right * Mathf.Sin(Time.time * 20) * detectAngle, transform.TransformDirection(Vector3.forward) * detectDistance);
 
@@ -179,7 +181,7 @@ namespace CarGame
                     //if (hit.transform.GetComponent<MeshRenderer>() ) hit.transform.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red);
 
                     // Поворот влево
-                    Rotate(-1);
+                    Rotate(-1,false);
 
                     //obstacleDetected = 0.1f;
                 }
@@ -189,7 +191,7 @@ namespace CarGame
                     //if (hit.transform.GetComponent<MeshRenderer>()) hit.transform.GetComponent<MeshRenderer>().material.SetColor("_EmissionColor", Color.red);
 
                     // Поворот право
-                    Rotate(1);
+                    Rotate(1,false);
 
                     //obstacleDetected = 0.1f;
                 }
@@ -198,12 +200,12 @@ namespace CarGame
                     // Вращаем машину пока она не достигнет желаемого угла погоди с обеих сторон игрока
                     if (Vector3.Angle(thisTransform.forward, targetPosition - thisTransform.position) > chaseAngle)
                     {
-                        Rotate(ChaseAngle(thisTransform.forward, targetPosition - thisTransform.position, Vector3.up));
+                        Rotate(ChaseAngle(thisTransform.forward, targetPosition - thisTransform.position, Vector3.up),false);
                         
                     }
                     else //Стоп вращения
                     {
-                        Rotate(0);
+                        Rotate(0,false);
                     }
                 }
             }
@@ -234,7 +236,11 @@ namespace CarGame
             }
         }
 
-
+        public void Drive(float direction)
+        {
+            float reverseSpeed = direction > 0 ? 1 : reverseRatioDirection;
+            transform.Translate(new Vector3(0, 0, direction) * Time.deltaTime * speed/ reverseSpeed, Space.Self);
+        }
         /// <summary>
         /// Вычисляет угол приближения объекта к другому объекту
         /// </summary>
@@ -267,7 +273,7 @@ namespace CarGame
         /// Поворачивает объект влево или право и применяет lean и  drift
         /// </summary>
         /// <param name="rotateDirection"></param>
-        public void Rotate(float rotateDirection)
+        public void Rotate(float rotateDirection,bool useReverse)
         {
             //thisTransform.localEulerAngles = new Vector3(Quaternion.FromToRotation(Vector3.up, groundHitInfo.normal).eulerAngles.x, thisTransform.localEulerAngles.y, Quaternion.FromToRotation(Vector3.up, groundHitInfo.normal).eulerAngles.z);
 
@@ -297,14 +303,16 @@ namespace CarGame
                 if (chassis) chassis.localEulerAngles = Vector3.forward * Mathf.LerpAngle(chassis.localEulerAngles.z, rotateDirection * leanAngle, Time.deltaTime);//  Mathf.LerpAngle(thisTransform.Find("Base").localEulerAngles.y, rotateDirection * driftAngle, Time.deltaTime);
 
                 //Анимация заноса, илил юбая другая
-                GetComponent<Animator>().Play("Skid");
+                if(rotateDirection>0.15f || rotateDirection<-0.15f)
+                     GetComponent<Animator>().Play("Skid");
 
                 // Проход по всем колесам и их вращение
                 for (index = 0; index < wheels.Length; index++)
                 {
-                    // Поворот передних колес
+                    // Если используется ревер, то его юзаем
+                    float reverse = useReverse ? -1 : 1;
                     if (index < frontWheels) 
-                        wheels[index].localEulerAngles = Vector3.up * Mathf.LerpAngle(wheels[index].localEulerAngles.y, rotateDirection * driftAngle, Time.deltaTime * 10);
+                        wheels[index].localEulerAngles = Vector3.up * Mathf.LerpAngle(wheels[index].localEulerAngles.y, reverse * rotateDirection * driftAngle, Time.deltaTime * 10);
 
                     // Крутить колеса
                     wheels[index].Find("WheelObject").Rotate(Vector3.right * Time.deltaTime * speed * 20, Space.Self);

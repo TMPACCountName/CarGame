@@ -57,11 +57,13 @@ namespace CarGame
         internal int highScore = 0;
         internal int scoreMultiplier = 1;
 
-        [Tooltip("Канвас магазина")]
+        [Tooltip("Скрипт магазина")]
         public Shop shopMenu;
 
-        [Tooltip("Канвас для рулевого колес")]
-        public Slider steeringWheel;
+        [Tooltip("Скрипт джойстика")]
+        public GameObject Joystick;
+        internal Stick stick;
+       
 
         [Header("Канвасы для UI")]
         public Transform gameCanvas;
@@ -69,6 +71,7 @@ namespace CarGame
         public Transform pauseCanvas;
         public Transform gameOverCanvas;
         public Transform menuCanvas;
+
 
         // Закончена ли игра
         internal bool isGameOver = false;
@@ -89,7 +92,7 @@ namespace CarGame
         // Название кнопки в инпуте для паузы
         internal string pauseButton = "Cancel";
         internal bool isPaused = false;
-
+        
 
         // главный индекс
         internal int index = 0;
@@ -97,6 +100,7 @@ namespace CarGame
         // Хуйня для вращения вареника
         internal Vector2 gameArea = new Vector2(10, 10);
         internal bool wrapAroundGameArea = false;
+        
 
         void Awake()
         {
@@ -125,15 +129,18 @@ namespace CarGame
             if (pauseCanvas) pauseCanvas.gameObject.SetActive(false);
             if (gameCanvas) gameCanvas.gameObject.SetActive(false);
             if (menuCanvas) menuCanvas.gameObject.SetActive(true);
-
+            if (Joystick)
+            {
+                //Дадим стику стик для дальнейшего управления
+                stick = Joystick.GetComponent<Stick>();
+                Joystick.gameObject.SetActive(false);
+            }
             //Установка самого большого балла игрока
             highScore = PlayerPrefs.GetInt(SceneManager.GetActiveScene().name + "HighScore", 0);
 
             //Назначение источника звука для упрощения доступа
             if (GameObject.FindGameObjectWithTag(soundSourceTag)) soundSource = GameObject.FindGameObjectWithTag(soundSourceTag);
 
-            //убираем руль из видимости
-            if (steeringWheel) steeringWheel.gameObject.SetActive(false);
         }
 
         public void StartGame()
@@ -164,10 +171,12 @@ namespace CarGame
             // Увеличивать скор игрока каждую секунду
             if (scorePerSecond > 0) InvokeRepeating("ScorePerSecond", startDelay, 1);
 
-            //показать колесо на мобильной платформе
-            if (steeringWheel && Application.isMobilePlatform) 
-                steeringWheel.gameObject.SetActive(true);
-
+            //показать джойстик на телефоне
+            if (Joystick && Application.isMobilePlatform)
+            {
+                Joystick.gameObject.SetActive(true);
+            }
+            
         }
 
         void Update()
@@ -200,36 +209,18 @@ namespace CarGame
                     // Если есть игрок то играем
                     if (playerObject)
                     {
+                        
+                        float direction = Input.GetAxis("Vertical");
                         // Если мобилка, то юзаем фичи для управления в зависимости от бока экрана
-                        if (Application.isMobilePlatform)
+                        if (stick && Application.isMobilePlatform)
                         {
-                            if (steeringWheel)
+                            direction = stick.GetVertical();
+                            if (stick)
                             {
-                                // При нажатии проверяем наше положение относительно экрана
-                                if (Input.GetMouseButton(0))
-                                {
-                                    playerDirection = steeringWheel.value;
-                                }
-                                else //если ничего не делали, то ничего не делать с ползунком
-                                {
-                                    steeringWheel.value = playerDirection = 0;
-                                }
-
-                                steeringWheel.transform.Find("Wheel").eulerAngles = Vector3.forward * playerDirection * -100;
+                                playerDirection = stick.GetHorizontal();
+                                playerObject.Drive(direction);
                             }
-                            else if (Input.GetMouseButton(0))
-                            {
-                                // Поворот вправо, если справа клик
-                                if (Input.mousePosition.x > Screen.width * 0.5f)
-                                {
-                                    playerDirection = 1;
-                                }
-                                else // Влево если слева если слева клик
-                                {
-                                    playerDirection = -1;
-                                }
-                            }
-                            else 
+                            else
                             {
                                 playerDirection = 0f;
                             }
@@ -237,12 +228,15 @@ namespace CarGame
                         else // Геймпад или клава
                         {
                             playerDirection = Input.GetAxis("Horizontal");
+                            playerObject.Drive(direction);
                         }
+                        
+                        if (direction > 0)
+                            playerObject.Rotate(playerDirection,false);
+                        if (direction < 0)
+                            playerObject.Rotate(-playerDirection, true); ;
 
-                        // Направление вращения
-                        playerObject.Rotate(playerDirection);
-
-                        // Неиспользуемый кусок кода позволяющий игроку обернуться вокруг игровой зоны
+                        // Возврат на зону
                         if (wrapAroundGameArea)
                         {
                             if (playerObject.transform.position.x > gameArea.x * 0.5f) playerObject.transform.position -= Vector3.right * gameArea.x;
@@ -270,9 +264,10 @@ namespace CarGame
                 {
                     // Камера следует за игроком
                     cameraHolder.position = playerObject.transform.position;
+                    cameraHolder.rotation = playerObject.transform.rotation;
 
                     // Камера вращается за игроком
-                    if (cameraRotate > 0) 
+                    if (cameraRotate > 0)
                         cameraHolder.eulerAngles = Vector3.up * Mathf.LerpAngle(cameraHolder.eulerAngles.y, playerObject.transform.eulerAngles.y, Time.deltaTime * cameraRotate);
                 }
 
