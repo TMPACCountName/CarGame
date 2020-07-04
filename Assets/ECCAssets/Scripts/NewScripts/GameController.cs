@@ -140,7 +140,7 @@ namespace CarGame
 
             //Назначение источника звука для упрощения доступа
             if (GameObject.FindGameObjectWithTag(soundSourceTag)) soundSource = GameObject.FindGameObjectWithTag(soundSourceTag);
-
+            Debug.Log(playerObject.speed);
         }
 
         public void StartGame()

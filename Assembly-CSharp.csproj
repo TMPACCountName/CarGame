@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{4F9212E2-498F-3E17-88EB-5F55920B82A0}</ProjectGuid>
+    <ProjectGuid>{E968300A-E1EA-78CA-622C-ADBF65915915}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\DamageZone.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\Legacy\ECCAnimateColors.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\Legacy\ECCAnimateUI.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\Legacy\ECCAudioControl.cs" />
@@ -78,6 +79,7 @@
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\Shop.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\SpawnAroundObject.cs" />
      <Compile Include="Assets\ECCAssets\Scripts\NewScripts\Types\ShopItem.cs" />
+     <Compile Include="Assets\GameTimer.cs" />
      <Compile Include="Assets\Joystick\Scripts\Stick.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Hub/Editor/5.6.4f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
