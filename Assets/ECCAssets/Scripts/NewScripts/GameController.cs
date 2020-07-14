@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using CarGame;
 
 
 namespace CarGame
@@ -63,7 +64,6 @@ namespace CarGame
         [Tooltip("Скрипт джойстика")]
         public GameObject Joystick;
         internal Stick stick;
-       
 
         [Header("Канвасы для UI")]
         public Transform gameCanvas;
@@ -71,7 +71,6 @@ namespace CarGame
         public Transform pauseCanvas;
         public Transform gameOverCanvas;
         public Transform menuCanvas;
-
 
         // Закончена ли игра
         internal bool isGameOver = false;
@@ -118,6 +117,7 @@ namespace CarGame
         }
         void Start()
         {
+
             //Application.targetFrameRate = 30;
             shopMenu.SetUIMoney();
             //Стартануть 0 очков
@@ -149,6 +149,9 @@ namespace CarGame
             // Спавним тачку
             if (playerObject)
             {
+                // Разворачиваем машинку на 180, без него машина спавнится к игроку передом
+                //playerObject.transform.rotation = Quaternion.Euler(0, 180, 0);
+
                 // Создание объекта на сцене
                 playerObject = Instantiate(playerObject);
 
@@ -181,6 +184,7 @@ namespace CarGame
 
         void Update()
         {
+
             //Если игра не начата, то всё
             if (!gameStarted) return;
 
@@ -209,8 +213,40 @@ namespace CarGame
                     // Если есть игрок то играем
                     if (playerObject)
                     {
-                        
+
                         float direction = Input.GetAxis("Vertical");
+
+                        
+
+                        if (direction != 0)
+                        {
+
+                            playerObject.speed += 0.01f; //Если игрок нажал вверх или вниз
+                            Debug.Log(playerObject.speed);
+                        }
+                        else //Если игрок не нажал ни вверх, ни вниз
+                        {
+       
+                            if (playerObject.speed > 0)
+                            {
+                                playerObject.speed = 20f ;                              
+                            }            
+                        }
+
+                       
+                        if (playerObject.speed > 35)
+                        {
+                            playerObject.speed = 35;
+                        }
+
+                        if (playerObject.speed <20)
+                        {
+                            playerObject.speed = 20;
+                        }
+
+
+
+
                         // Если мобилка, то юзаем фичи для управления в зависимости от бока экрана
                         if (stick && Application.isMobilePlatform)
                         {

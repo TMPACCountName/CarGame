@@ -37,7 +37,7 @@ namespace CarGame
         public int damage = 1;
 
         [Tooltip("Скорость")]
-        public float speed = 10;
+        public float speed = 20;
 
         [Tooltip("Скорость поворота")]
         public float rotateSpeed = 200;
@@ -290,7 +290,7 @@ namespace CarGame
 
                 thisTransform.eulerAngles = new Vector3(thisTransform.eulerAngles.x, thisTransform.eulerAngles.y, thisTransform.eulerAngles.z);
 
-                //thisTransform.eulerAngles = new Vector3(rightAngle, thisTransform.eulerAngles.y, forwardAngle);
+                thisTransform.eulerAngles = new Vector3(rightAngle, thisTransform.eulerAngles.y, forwardAngle);
 
                 currentRotation += rotateDirection * rotateSpeed * Time.deltaTime;
 
@@ -299,7 +299,7 @@ namespace CarGame
                 // Сделать основание автомобиля дрейфующим на основе угла поворота
                 thisTransform.Find("Base").localEulerAngles = new Vector3(rightAngle, Mathf.LerpAngle(thisTransform.Find("Base").localEulerAngles.y, rotateDirection * driftAngle + Mathf.Sin(Time.time * 50) * hurtDelayCount * 50, Time.deltaTime), 0);//  Mathf.LerpAngle(thisTransform.Find("Base").localEulerAngles.y, rotateDirection * driftAngle, Time.deltaTime);
 
-                //Налон шасси
+                //Наклон шасси
                 if (chassis) chassis.localEulerAngles = Vector3.forward * Mathf.LerpAngle(chassis.localEulerAngles.z, rotateDirection * leanAngle, Time.deltaTime);//  Mathf.LerpAngle(thisTransform.Find("Base").localEulerAngles.y, rotateDirection * driftAngle, Time.deltaTime);
 
                 //Анимация заноса, илил юбая другая
